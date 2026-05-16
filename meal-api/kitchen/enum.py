@@ -1,0 +1,10 @@
+from django.db import models
+
+
+class TrayStatus(models.TextChoices):
+    CREATED = "CREATED"
+    PREPARATION_STARTED = "PREPARATION_STARTED"
+    ACCURACY_VALIDATED = "ACCURACY_VALIDATED"
+    EN_ROUTE = "EN_ROUTE"
+    DELIVERED = "DELIVERED"
+    RETRIEVED = "RETRIEVED"
