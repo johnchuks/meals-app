@@ -28,8 +28,8 @@ export function useTrayPatientContexts() {
       }),
     )
 
-    setContextsByTrayId((prev) => {
-      const next = { ...prev }
+    setContextsByTrayId((currentContextsByTrayId) => {
+      const next = { ...currentContextsByTrayId }
       for (const entry of fetched) if (entry) next[entry[0]] = entry[1]
       return next
     })

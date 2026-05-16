@@ -1,10 +1,6 @@
-import type { Patient } from '../../types'
-import { clinicalStateLabel } from '../../labels'
-
-function formatIsoAsLocalDateTime(iso: string): string {
-  const parsed = new Date(iso)
-  return isNaN(parsed.getTime()) ? iso : parsed.toLocaleString()
-}
+import type { Patient } from '../types'
+import { clinicalStateLabel } from '../labels'
+import { formatIsoAsLocalDateTime } from '../utils/datetime'
 
 interface PatientHeaderCardProps {
   patient: Patient
@@ -24,5 +20,3 @@ export default function PatientHeaderCard({ patient }: PatientHeaderCardProps) {
     </header>
   )
 }
-
-export { formatIsoAsLocalDateTime }

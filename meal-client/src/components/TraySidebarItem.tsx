@@ -1,6 +1,6 @@
-import type { Recipe, Tray } from '../../types'
-import { dietLabel, trayStatusLabel } from '../../labels'
-import type { TrayPatientContext } from '../../hooks/useTrayPatientContexts'
+import type { Recipe, Tray } from '../types'
+import { dietLabel, trayStatusLabel } from '../labels'
+import type { TrayPatientContext } from '../hooks/useTrayPatientContexts'
 
 interface TraySidebarItemProps {
   tray: Tray

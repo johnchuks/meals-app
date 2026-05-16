@@ -1,6 +1,6 @@
-import type { TrayStatus } from '../../types'
-import { trayStatusLabel } from '../../labels'
-import { TRAY_STATUS_PIPELINE } from '../../domain/trayWorkflow'
+import type { TrayStatus } from '../types'
+import { trayStatusLabel } from '../labels'
+import { TRAY_STATUS_PIPELINE } from '../domain/trayWorkflow'
 
 export type TrayStatusFilterValue = TrayStatus | 'ALL'
 

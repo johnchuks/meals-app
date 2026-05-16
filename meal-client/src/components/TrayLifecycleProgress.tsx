@@ -1,10 +1,10 @@
-import type { TrayStatus } from '../../types'
-import { trayStatusLabel } from '../../labels'
+import type { TrayStatus } from '../types'
+import { trayStatusLabel } from '../labels'
 import {
   NEXT_TRANSITION_BY_STATUS,
   TRAY_STATUS_PIPELINE,
   classifyPipelineStep,
-} from '../../domain/trayWorkflow'
+} from '../domain/trayWorkflow'
 
 interface TrayLifecycleProgressProps {
   currentStatus: TrayStatus

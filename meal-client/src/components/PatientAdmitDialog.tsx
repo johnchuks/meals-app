@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { api } from '../../api'
-import type { DietType, Patient } from '../../types'
-import { DIET_TYPES } from '../../types'
-import { dietLabel } from '../../labels'
+import { api } from '../api'
+import type { DietType, Patient } from '../types'
+import { DIET_TYPES } from '../types'
+import { dietLabel } from '../labels'
 
 interface PatientAdmitDialogProps {
   onClose: () => void

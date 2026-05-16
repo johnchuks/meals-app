@@ -2,36 +2,40 @@ import type { UserRole } from './types'
 
 const ACCESS_KEY = 'meals.access'
 const REFRESH_KEY = 'meals.refresh'
+const ROLE_KEY = 'meals.role'
+const USERNAME_KEY = 'meals.username'
 
-function decodeRole(token: string): UserRole | null {
-  try {
-    const payload = token.split('.')[1]
-    const padded = payload.replace(/-/g, '+').replace(/_/g, '/')
-    const json = atob(padded + '==='.slice((padded.length + 3) % 4))
-    const claims = JSON.parse(json) as { role?: string }
-    if (claims.role === 'DIETARY_STAFF' || claims.role === 'KITCHEN_STAFF') {
-      return claims.role
-    }
-    return null
-  } catch {
-    return null
-  }
+const KNOWN_ROLES: readonly UserRole[] = ['DIETARY_STAFF', 'KITCHEN_STAFF']
+
+function parseUserRole(candidate: unknown): UserRole | null {
+  return KNOWN_ROLES.includes(candidate as UserRole) ? (candidate as UserRole) : null
+}
+
+export interface SignedInSession {
+  role: UserRole
+  username: string
 }
 
 export const auth = {
   getAccess: () => localStorage.getItem(ACCESS_KEY),
   getRefresh: () => localStorage.getItem(REFRESH_KEY),
-  getRole: (): UserRole | null => {
-    const token = localStorage.getItem(ACCESS_KEY)
-    return token ? decodeRole(token) : null
+  getSession: (): SignedInSession | null => {
+    const role = parseUserRole(localStorage.getItem(ROLE_KEY))
+    const username = localStorage.getItem(USERNAME_KEY)
+    if (!role || !username) return null
+    return { role, username }
   },
-  set: (access: string, refresh: string) => {
+  set: (access: string, refresh: string, session: SignedInSession) => {
     localStorage.setItem(ACCESS_KEY, access)
     localStorage.setItem(REFRESH_KEY, refresh)
+    localStorage.setItem(ROLE_KEY, session.role)
+    localStorage.setItem(USERNAME_KEY, session.username)
   },
   clear: () => {
     localStorage.removeItem(ACCESS_KEY)
     localStorage.removeItem(REFRESH_KEY)
+    localStorage.removeItem(ROLE_KEY)
+    localStorage.removeItem(USERNAME_KEY)
   },
 }
 
@@ -75,7 +79,11 @@ async function refreshAccessToken(): Promise<string | null> {
       if (!res.ok) return null
       const data = (await res.json()) as { access?: string; refresh?: string }
       if (!data.access) return null
-      auth.set(data.access, data.refresh ?? refresh)
+      // Refresh doesn't re-issue role/username; the existing session stays
+      // valid because the refresh token is bound to the same user.
+      const existingSession = auth.getSession()
+      if (!existingSession) return null
+      auth.set(data.access, data.refresh ?? refresh, existingSession)
       return data.access
     } catch {
       return null
@@ -128,19 +136,27 @@ export async function api<T = unknown>(
   return body as T
 }
 
+interface TokenResponse {
+  access: string
+  refresh: string
+  role: string
+  username: string
+  is_superuser: boolean
+}
+
 export async function login(
   username: string,
   password: string,
-): Promise<UserRole> {
-  const data = await api<{ access: string; refresh: string }>('/auth/token', {
+): Promise<SignedInSession> {
+  const data = await api<TokenResponse>('/auth/token', {
     method: 'POST',
     body: JSON.stringify({ username, password }),
   })
-  auth.set(data.access, data.refresh)
-  const role = decodeRole(data.access)
+  const role = parseUserRole(data.role)
   if (!role) {
-    auth.clear()
-    throw new Error('Token is missing a valid role claim')
+    throw new Error(`Unrecognized role from server: ${data.role}`)
   }
-  return role
+  const session: SignedInSession = { role, username: data.username }
+  auth.set(data.access, data.refresh, session)
+  return session
 }

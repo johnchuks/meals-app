@@ -1,6 +1,6 @@
-import type { MealRequest, Recipe, Tray } from '../../types'
-import { requestStatusLabel, trayStatusLabel } from '../../labels'
-import { formatIsoAsLocalDateTime } from './PatientHeaderCard'
+import type { MealRequest, Recipe, Tray } from '../types'
+import { requestStatusLabel, trayStatusLabel } from '../labels'
+import { formatIsoAsLocalDateTime } from '../utils/datetime'
 
 interface MealRequestHistoryListProps {
   requests: MealRequest[]

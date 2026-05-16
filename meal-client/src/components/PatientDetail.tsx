@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { api } from '../../api'
-import type { Allergen, DietType, MealRequest, Patient, Recipe, Tray } from '../../types'
+import { api } from '../api'
+import type { Allergen, DietType, MealRequest, Patient, Recipe, Tray } from '../types'
 import PatientHeaderCard from './PatientHeaderCard'
 import PatientDietPicker from './PatientDietPicker'
 import PatientAllergyEditor from './PatientAllergyEditor'
@@ -52,8 +52,8 @@ export default function PatientDetail({
           }),
         )
         if (!isMounted) return
-        setTrayByRequestId((prev) => {
-          const next = { ...prev }
+        setTrayByRequestId((currentTrayByRequestId) => {
+          const next = { ...currentTrayByRequestId }
           for (const entry of fetchedTrayEntries) if (entry) next[entry[0]] = entry[1]
           return next
         })
@@ -70,10 +70,10 @@ export default function PatientDetail({
   }, [patient.id])
 
   function upsertHistoryEntry(request: MealRequest) {
-    setRequestHistory((existing) => {
-      const matchIndex = existing.findIndex((r) => r.id === request.id)
-      if (matchIndex === -1) return [request, ...existing]
-      const copy = existing.slice()
+    setRequestHistory((currentRequestHistory) => {
+      const matchIndex = currentRequestHistory.findIndex((r) => r.id === request.id)
+      if (matchIndex === -1) return [request, ...currentRequestHistory]
+      const copy = currentRequestHistory.slice()
       copy[matchIndex] = request
       return copy
     })
@@ -115,8 +115,8 @@ export default function PatientDetail({
   }
 
   function toggleRecipePicked(recipeId: string) {
-    setPickedRecipeIds((prev) => {
-      const next = new Set(prev)
+    setPickedRecipeIds((currentPickedRecipeIds) => {
+      const next = new Set(currentPickedRecipeIds)
       if (next.has(recipeId)) next.delete(recipeId)
       else next.add(recipeId)
       return next
@@ -157,7 +157,10 @@ export default function PatientDetail({
         try {
           const matchingTrays = await api<Tray[]>(`/trays?meal_request_id=${finalized.id}`)
           if (matchingTrays[0]) {
-            setTrayByRequestId((prev) => ({ ...prev, [finalized.id]: matchingTrays[0] }))
+            setTrayByRequestId((currentTrayByRequestId) => ({
+              ...currentTrayByRequestId,
+              [finalized.id]: matchingTrays[0],
+            }))
           }
         } catch { /* ignore */ }
       }

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
-import type { Recipe, Tray, TrayHistory } from '../../types'
-import { dietLabel, trayStatusLabel } from '../../labels'
-import type { TrayPatientContext } from '../../hooks/useTrayPatientContexts'
+import type { Recipe, Tray, TrayHistory } from '../types'
+import { dietLabel, trayStatusLabel } from '../labels'
+import type { TrayPatientContext } from '../hooks/useTrayPatientContexts'
 import TrayLifecycleProgress from './TrayLifecycleProgress'
 import TrayTransitionHistory from './TrayTransitionHistory'
 

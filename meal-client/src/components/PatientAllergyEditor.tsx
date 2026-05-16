@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import type { Allergen, Allergy } from '../../types'
-import { ALLERGENS } from '../../types'
-import { allergenLabel } from '../../labels'
+import type { Allergen, Allergy } from '../types'
+import { ALLERGENS } from '../types'
+import { allergenLabel } from '../labels'
 
 interface PatientAllergyEditorProps {
   allergies: Allergy[]

@@ -23,6 +23,7 @@ class TokenObtainTests(TestCase):
         self.assertIn("access", body)
         self.assertIn("refresh", body)
         self.assertEqual(body["role"], UserRole.KITCHEN_STAFF)
+        self.assertEqual(body["username"], "kim")
         self.assertFalse(body["is_superuser"])
 
     def test_rejects_wrong_password(self):

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import type { Patient } from '../../types'
-import { clinicalStateLabel, dietLabel } from '../../labels'
+import type { Patient } from '../types'
+import { clinicalStateLabel, dietLabel } from '../labels'
 import PatientAdmitDialog from './PatientAdmitDialog'
 
 interface PatientSidebarListProps {

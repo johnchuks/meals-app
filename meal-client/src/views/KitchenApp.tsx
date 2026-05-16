@@ -4,9 +4,9 @@ import type { Recipe, Tray, TrayHistory } from '../types'
 import SidebarContentLayout from '../components/SidebarContentLayout'
 import { NEXT_TRANSITION_BY_STATUS } from '../domain/trayWorkflow'
 import { useTrayPatientContexts } from '../hooks/useTrayPatientContexts'
-import TrayStatusFilter, { type TrayStatusFilterValue } from './kitchen/TrayStatusFilter'
-import TraySidebarItem from './kitchen/TraySidebarItem'
-import TrayDetailPanel from './kitchen/TrayDetailPanel'
+import TrayStatusFilter, { type TrayStatusFilterValue } from '../components/TrayStatusFilter'
+import TraySidebarItem from '../components/TraySidebarItem'
+import TrayDetailPanel from '../components/TrayDetailPanel'
 
 export default function KitchenApp() {
   const [trays, setTrays] = useState<Tray[]>([])
@@ -77,7 +77,9 @@ export default function KitchenApp() {
       const updatedTray = await api<Tray>(`/trays/${tray.id}/${transition.apiPath}`, {
         method: 'POST',
       })
-      setTrays((list) => list.map((t) => (t.id === updatedTray.id ? updatedTray : t)))
+      setTrays((currentTrays) =>
+        currentTrays.map((t) => (t.id === updatedTray.id ? updatedTray : t)),
+      )
       if (selectedTrayId === tray.id) {
         const refreshedHistory = await api<TrayHistory[]>(`/trays/${tray.id}/status-history`)
         setSelectedTrayHistory(refreshedHistory)

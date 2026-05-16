@@ -1,5 +1,5 @@
-import type { TrayHistory } from '../../types'
-import { trayStatusLabel } from '../../labels'
+import type { TrayHistory } from '../types'
+import { trayStatusLabel } from '../labels'
 
 interface TrayTransitionHistoryProps {
   transitions: TrayHistory[]

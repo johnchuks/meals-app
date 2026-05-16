@@ -1,5 +1,5 @@
-import type { Recipe } from '../../types'
-import { allergenLabel, dietLabel } from '../../labels'
+import type { Recipe } from '../types'
+import { allergenLabel, dietLabel } from '../labels'
 
 interface MealRequestComposerProps {
   recipes: Recipe[]

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { api } from '../api'
 import type { Patient, Recipe } from '../types'
 import SidebarContentLayout from '../components/SidebarContentLayout'
-import PatientSidebarList from './dietary/PatientSidebarList'
-import PatientDetail from './dietary/PatientDetail'
+import PatientSidebarList from '../components/PatientSidebarList'
+import PatientDetail from '../components/PatientDetail'
 
 export default function DietaryApp() {
   const [patients, setPatients] = useState<Patient[]>([])
@@ -37,10 +37,10 @@ export default function DietaryApp() {
   }, [])
 
   function upsertPatientInList(patient: Patient) {
-    setPatients((existing) => {
-      const matchIndex = existing.findIndex((p) => p.id === patient.id)
-      if (matchIndex === -1) return [patient, ...existing]
-      const copy = existing.slice()
+    setPatients((currentPatients) => {
+      const matchIndex = currentPatients.findIndex((p) => p.id === patient.id)
+      if (matchIndex === -1) return [patient, ...currentPatients]
+      const copy = currentPatients.slice()
       copy[matchIndex] = patient
       return copy
     })

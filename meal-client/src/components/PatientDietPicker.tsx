@@ -1,6 +1,6 @@
-import type { DietType } from '../../types'
-import { DIET_TYPES } from '../../types'
-import { dietLabel } from '../../labels'
+import type { DietType } from '../types'
+import { DIET_TYPES } from '../types'
+import { dietLabel } from '../labels'
 
 interface PatientDietPickerProps {
   currentDiet: DietType

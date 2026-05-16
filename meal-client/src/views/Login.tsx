@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { login } from '../api'
-import type { UserRole } from '../types'
+import { login, type SignedInSession } from '../api'
 
-export default function Login({ onLogin }: { onLogin: (role: UserRole) => void }) {
+export default function Login({ onLogin }: { onLogin: (session: SignedInSession) => void }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -13,8 +12,8 @@ export default function Login({ onLogin }: { onLogin: (role: UserRole) => void }
     setBusy(true)
     setError(null)
     try {
-      const role = await login(username, password)
-      onLogin(role)
+      const session = await login(username, password)
+      onLogin(session)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed')
     } finally {
