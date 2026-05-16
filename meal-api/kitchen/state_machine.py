@@ -30,5 +30,5 @@ def next_status(current: str) -> str | None:
 
 
 def assert_can_transition(current: str, target: str) -> None:
-    if TRANSITIONS.get(current) != target:
+    if next_status(current) != target:
         raise InvalidTransition(current, target)

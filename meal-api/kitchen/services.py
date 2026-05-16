@@ -55,7 +55,7 @@ class TrayService:
         timestamp_field = TIMESTAMP_FIELDS[target_status]
         tray.status = target_status
         setattr(tray, timestamp_field, timezone.now())
-        tray.save(update_fields=["status", timestamp_field])
+        tray.save()
 
         TrayStatusHistory.objects.create(
             tray=tray,

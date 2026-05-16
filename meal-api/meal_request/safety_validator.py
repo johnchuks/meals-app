@@ -22,9 +22,10 @@ class SafetyValidator:
         """Returns whether the meal request is safe, and if not, why."""
         for recipe in recipes:
             if patient.allergens.intersection(recipe.allergens):
+                allergies = ",".join(patient.allergens.intersection(recipe.allergens))
                 return SafetyResult(
                     is_safe=False,
-                    reason=f"Patient allergic to {patient.allergens.intersection(recipe.allergens)} in recipe {recipe.name}",
+                    reason=f"Patient allergic to {allergies.lower()} in recipe {recipe.name}",
                 )
             if patient.diet not in recipe.compatible_diets:
                 return SafetyResult(

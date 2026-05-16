@@ -29,13 +29,7 @@ class PatientListCreateView(APIView):
     def post(self, request):
         write = PatientWriteSerializer(data=request.data)
         write.is_valid(raise_exception=True)
-        try:
-            patient = PatientService().admit(**write.validated_data)
-        except IntegrityError:
-            return Response(
-                {"detail": "patient with this MRN already exists"},
-                status=status.HTTP_409_CONFLICT,
-            )
+        patient = PatientService().admit(**write.validated_data)
         return Response(
             PatientSerializer(patient).data, status=status.HTTP_201_CREATED
         )
