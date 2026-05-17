@@ -52,3 +52,30 @@ make api-down  # stop and remove API containers
 | Client  | http://localhost:5173   |
 | API     | http://localhost:3000   |
 | Postgres| localhost:5432 (`meals` / `meals` / db `meals`) |
+
+## Sign-in accounts
+
+> ⚠️ **Local development only.** The credentials below are baked into the
+> repository for convenience and must **never** be used in a production,
+> staging, or otherwise shared environment. Provision real accounts with strong,
+> unique passwords (and disable / delete the seeded users) before deploying.
+
+The API container seeds one user per staff role on startup (via
+`python manage.py seed_users`, called from `entrypoint.sh`). Use either account
+to sign in at http://localhost:5173 — the role embedded in the JWT determines
+which workspace you land in (Dietary vs Kitchen).
+
+| Role          | Username   | Password         | Lands on        |
+| ------------- | ---------- | ---------------- | --------------- |
+| Kitchen staff | `kitchen1` | `Kitchen!2026`   | Tray fulfillment |
+| Dietary staff | `dietary1` | `Dietary!2026`   | Patient + meal requests |
+
+A Django superuser is also created for the admin site at
+http://localhost:3000/admin/ — username `mealAdmin`, password `MealAdmin!2026`.
+The superuser is **not** a staff role and is not intended for the client app.
+
+To re-run the seeder against an existing database (idempotent):
+
+```bash
+cd meal-api && docker compose exec api python manage.py seed_users
+```

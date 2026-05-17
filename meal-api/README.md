@@ -29,7 +29,28 @@ docker compose up --build
 
 The API listens on `http://localhost:3000`. Postgres is exposed on `5432` (db/user/password all `meals`).
 
-On startup the `api` container runs migrations and seeds the recipe catalog (see `entrypoint.sh`). The Django admin is available at `/admin/`.
+On startup the `api` container runs migrations and seeds the recipe catalog and staff users (see `entrypoint.sh`). The Django admin is available at `/admin/`.
+
+## Seeded accounts
+
+> ⚠️ **Local development only.** These credentials live in source control and
+> are for the local Docker Compose stack. Do **not** run `seed_users` against a
+> production or shared environment — provision real accounts with unique
+> passwords instead.
+
+`python manage.py seed_users` runs on container start and is idempotent — one
+user per staff role:
+
+| Role                       | Username   | Password         |
+| -------------------------- | ---------- | ---------------- |
+| `UserRole.KITCHEN_STAFF`   | `kitchen1` | `Kitchen!2026`   |
+| `UserRole.DIETARY_STAFF`   | `dietary1` | `Dietary!2026`   |
+
+Sign in at the client (http://localhost:5173) with either account to enter the
+matching workspace. `POST /auth/token` returns `{ access, refresh, role, username, is_superuser }` — the client persists `role` + `username` and routes off `role`.
+
+A superuser (`mealAdmin` / `MealAdmin!2026`) is also created for `/admin/`; it
+has no staff role and should not be used to sign in to the client.
 
 ## Endpoints
 
